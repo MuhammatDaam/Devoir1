@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Agences{% endblock %}
+
+{% block body %}
+    <h1>Gestion des Agences</h1>
+
+    <div class="mb-3">
+        <form method="get" action="{{ path('agency_index') }}">
+            <input type="text" name="filter" placeholder="Rechercher par téléphone ou adresse">
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for agency in agencies %}
+            <tr>
+                <td>{{ agency.numero }}</td>
+                <td>{{ agency.adresse }}</td>
+                <td>{{ agency.telephone }}</td>
+                <td>
+                    <a href="#" class="btn btn-primary">Voir</a>
+                    <form method="post" action="{{ path('agency_delete', {'id': agency.id}) }}" style="display: inline-block">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agency.id) }}">
+                        <button class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {% if current_page > 1 %}
+            <a href="{{ path('agency_index', {page: current_page - 1}) }}">Précédent</a>
+        {% endif %}
+        
+        Page {{ current_page }}
+        
+        <a href="{{ path('agency_index', {page: current_page + 1}) }}">Suivant</a>
+    </div>
+
+    <a href="{{ path('agency_new') }}" class="btn btn-success">Créer une nouvelle agence</a>
+{% endblock %}
